@@ -3,6 +3,7 @@ rekognitionを用いたLine Bot感情分析
 """
 
 import os
+import glob
 
 from linebot.lambda_function import (
     LineBotApi, WebhookHandler
@@ -118,12 +119,23 @@ def handle_Image_message(event):
 
 
     #画像が不要になったので削除
-    os.remove(file_path)
+    #os.remove(file_path)
+    
+    #tmpファイルを全削除
+    cleartmp()
 
 #メッセージが動画だった時の処理
 @handler.add(MessageEvent, message=VideoMessage)
 def handle_Video_message(event):
+    cleartmp()
     input_text = "ごめんなさい。動画は処理できないのよ。画像を送ってくれるかしら。一人で写っている写真をお願いね。"
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=input_text))
+
+
+#tmpファイルを全削除
+def cleartmp():
+    for p in glob.glob('/tmp/' + '*'):
+       if os.path.isfile(p):
+           os.remove(p)
