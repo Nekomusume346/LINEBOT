@@ -1,5 +1,5 @@
 """
-rekognitionを用いたLine Bot　感情分析
+rekognitionを用いたLine Bot感情分析
 """
 
 import os
@@ -8,7 +8,7 @@ from linebot.lambda_function import (
     LineBotApi, WebhookHandler
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage, ImageMessage,
+    MessageEvent, TextMessage, TextSendMessage, ImageMessage,VideoMessage
 )
 
 import boto3
@@ -119,3 +119,11 @@ def handle_Image_message(event):
 
     #画像が不要になったので削除
     os.remove(file_path)
+
+#メッセージが動画だった時の処理
+@handler.add(MessageEvent, message=VideoMessage)
+def handle_Video_message(event):
+    input_text = "ごめんなさい。動画は処理できないのよ。画像を送ってくれるかしら。一人で写っている写真をお願いね。"
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text=input_text))
